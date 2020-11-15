@@ -4,6 +4,6 @@
 
 using namespace std;
 
-#include <iostream>
+#include <iostream.h>
 #include <stdio.h>
-#include <string>
+#include <string.h>
