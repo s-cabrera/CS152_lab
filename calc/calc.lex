@@ -4,8 +4,8 @@
 %{
 #include "heading.h"
 #include "tok.h"
-int yyerror(char *s);
-yylineno = 1;
+void yyerror(char *s);
+
 %}
 
 digit		[0-9]
@@ -20,4 +20,11 @@ int_const	{digit}+
 [ \t]*		{}
 [\n]		{ yylineno++;	}
 
-.		{ std::cerr << "SCANNER "; yyerror(""); exit(1);	}
+%%
+int main(int argc, char **argv){
+	yyparse();
+	return 0;
+}
+void yyerror(char *s){
+	printf("error!!!");
+}
