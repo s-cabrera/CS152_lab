@@ -4,7 +4,7 @@
 %{
 #include "heading.h"
 #include "tok.h"
-yyerror(char *s);
+int yyerror(char *s);
 yylineno = 1;
 %}
 
