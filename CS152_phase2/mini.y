@@ -7,6 +7,8 @@
  FILE * yyin;
 %}
 
+%error-verbose
+%start program
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY
 %token INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE 
 %token READ WRITE 
@@ -24,7 +26,7 @@
 %left AND
 %left OR
 %right ASSIGN
-%start program
+
 
 %%
 program: /*epsilon*/ {printf("program --> epsilon");}
