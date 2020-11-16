@@ -100,7 +100,7 @@ comp: EQ {printf("comp --> EQ\n");}
 		;
 		
 expression-loop: /*epsilon*/ {printf("expression-loop --> epsilon\n");}
-	| expression-loop PLUS multiplicative-expr {printf("expression-loop --> expression-loop PLUS multiplicative-expr");}
+	| expression-loop ADD multiplicative-expr {printf("expression-loop --> expression-loop PLUS multiplicative-expr");}
 	| expression-loop SUB multiplicative-expr {printf("expression-loop --> expression-loop SUB multiplicative-expr");}
 		;
 
