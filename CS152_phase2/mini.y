@@ -29,8 +29,8 @@
 
 
 %%
-program: /*epsilon*/ {printf("program --> epsilon");}
-		program function {printf(" program --> program function");}
+program: program function {printf(" program --> program function");}
+		/*epsilon*/ {printf("program --> epsilon");}
 		;
 		
 declaration-loop: /*epsilon*/ {printf("declaration-loop --> epsilon\n");}
