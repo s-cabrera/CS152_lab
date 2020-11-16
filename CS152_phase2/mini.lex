@@ -90,7 +90,7 @@ _+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin 
 
 				/***** Unexpected Symbols *****/
 				/******************************/
-.				{ printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}	
+.				{ printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); currPos += yyleng;}	
 
 %%
 
