@@ -118,7 +118,7 @@ multiplicative-expr: term mult-expr-loop{printf("multiplicative-expr --> term mu
 		
 term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
 	| expression {printf("term-loop --> expression\n");}
-	| expression COMMA term_loop{printf("term-loop --> expression COMMA term-loop");}
+	| expression COMMA term-loop{printf("term-loop --> expression COMMA term-loop");}
 		;
 		
 term: var {printf("term --> var\n");}
