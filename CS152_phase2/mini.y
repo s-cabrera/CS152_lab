@@ -24,7 +24,7 @@
 %left AND
 %left OR
 %right ASSIGN
-% start program
+%start program
 
 %%
 program: /*epsilon*/ {printf("program --> epsilon");}
