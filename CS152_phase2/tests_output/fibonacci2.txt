@@ -1,0 +1,92 @@
+program --> epsilon 
+ident-loop --> epsilon
+declaration --> IDENT ident-loop COLON INTEGER
+declaration-loop --> epsilon
+declaration-loop --> declaration SEMICOLON declaration-loop
+declaration-loop --> epsilon
+var --> IDENT 
+term --> var
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+expression --> multiplicative-expr expression-loop
+comp --> LTE
+term --> NUMBER 
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+expression --> multiplicative-expr expression-loop
+relation-expr --> expression comp expression
+relation-and-expr-loop --> epsilon
+relation-and-expr --> relation-expr
+bool-expr-loop --> epsilon
+bool-expr --> relation-and-expr bool-expr-loop
+relation-expr --> L_PAREN bool-expr R_PAREN
+relation-and-expr-loop --> epsilon
+relation-and-expr --> relation-expr
+bool-expr-loop --> epsilon
+bool-expr --> relation-and-expr bool-expr-loop
+term --> NUMBER 
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+expression --> multiplicative-expr expression-loop
+statement --> RETURN expression
+stmt-loop --> epsilon
+stmt-loop --> statement SEMICOLON stmt-loop
+statement --> IF bool-expr THEN stmt-loop ENDIF
+var --> IDENT 
+term --> var
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+term --> NUMBER 
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop SUB multiplicative-exprexpression --> multiplicative-expr expression-loop
+term-loop --> expression
+term --> IDENT L_PAREN expression R_PAREN
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+var --> IDENT 
+term --> var
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+term --> NUMBER 
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop SUB multiplicative-exprexpression --> multiplicative-expr expression-loop
+term-loop --> expression
+term --> IDENT L_PAREN expression R_PAREN
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop PLUS multiplicative-exprexpression --> multiplicative-expr expression-loop
+statement --> RETURN expression
+stmt-loop --> epsilon
+stmt-loop --> statement SEMICOLON stmt-loop
+stmt-loop --> statement SEMICOLON stmt-loop
+function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY
+ program --> program function 
+declaration-loop --> epsilon
+ident-loop --> epsilon
+declaration --> IDENT ident-loop COLON INTEGER
+ident-loop --> epsilon
+declaration --> IDENT ident-loop COLON INTEGER
+declaration-loop --> epsilon
+declaration-loop --> declaration SEMICOLON declaration-loop
+declaration-loop --> declaration SEMICOLON declaration-loop
+var --> IDENT 
+var-loop --> varstatement --> READ var-loop
+var --> IDENT 
+var --> IDENT 
+term --> var
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+expression --> multiplicative-expr expression-loop
+term-loop --> expression
+term --> IDENT L_PAREN expression R_PAREN
+mult-expr-loop --> epsilon 
+multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+expression --> multiplicative-expr expression-loop
+statement --> 
+var --> IDENT 
+var-loop --> varstatement --> WRITE var-loop
+stmt-loop --> epsilon
+stmt-loop --> statement SEMICOLON stmt-loop
+stmt-loop --> statement SEMICOLON stmt-loop
+stmt-loop --> statement SEMICOLON stmt-loop
+function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY
+ program --> program function 
