@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* Regexes */
 %{
 	#include "y.tab.h"
