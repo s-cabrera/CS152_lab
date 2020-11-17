@@ -78,10 +78,10 @@ bool-expr: relation-and-expr bool-expr-loop{printf("bool-expr --> relation-and-e
 		;
 		
 relation-and-expr-loop: /*epsilon*/ {printf("relation-and-expr-loop --> epsilon\n");}
-	| AND relation-and-expr relation-and-expr-loop {printf("relation-and-expr-loop --> AND relation-and-expr relation-and-expr-loop\n");}
+	| AND relation-expr relation-and-expr-loop {printf("relation-and-expr-loop --> AND relation-and-expr relation-and-expr-loop\n");}
 		;
 		
-relation-and-expr: relation-expr relation-and-expr-loop{printf("relation-and-expr --> relation-expr\n");}
+relation-and-expr: relation-expr relation-and-expr-loop{printf("relation-and-expr --> relation-expr relation-and-expr-loop\n");}
 		;
 		
 relation-expr: expression comp expression {printf("relation-expr --> expression comp expression\n");}
