@@ -58,7 +58,7 @@ var-loop: var {printf("var-loop --> var \n");}
 	| var COLON var-loop{printf("var-loop --> var COLON var-loop\n");}
 	;
 		
-statement: var ASSIGN expression {printf("statement --> \n");}
+statement: var ASSIGN expression {printf("statement --> var ASSIGN expression \n");}
 	| IF bool-expr THEN stmt-loop ENDIF {printf("statement --> IF bool-expr THEN stmt-loop ENDIF\n");}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("statement --> IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF\n");}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("statement --> WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n");}
