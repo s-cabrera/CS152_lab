@@ -4,7 +4,7 @@
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
- extern const char * yytext;
+ extern const char * yytext
  FILE * yyin;
 %}
 
@@ -38,16 +38,16 @@ declaration-loop: /*epsilon*/ {printf("declaration-loop --> epsilon\n");}
 	| declaration SEMICOLON declaration-loop{printf("declaration-loop --> declaration SEMICOLON declaration-loop\n");}
 		;
 		
-function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY {printf("function --> FUNCTION IDENT %s SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY\n", yytext);}
+function: FUNCTION ident SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY {printf("function --> FUNCTION ident SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY\n");}
 		;
 		
 ident-loop:/*epsilon*/ {printf("ident-loop --> epsilon\n");}
-	| COMMA IDENT ident-loop {printf("ident-loop -->  COMMA IDENT ident-loop\n");}
+	| COMMA ident ident-loop {printf("ident-loop -->  COMMA ident ident-loop\n");}
 		; 
 		
-declaration: IDENT ident-loop COLON INTEGER {printf("declaration --> IDENT %s ident-loop COLON INTEGER\n", yytext);}
-	| IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -->IDENT %s ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER %s R_SQUARE_BRACKET OF INTEGER\n", yytext);}
-	| IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration --> IDENT %s ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER %s R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER %s R_SQUARE_BRACKET OF INTEGER\n", yytext);}
+declaration: ident ident-loop COLON INTEGER {printf("declaration --> ident ident-loop COLON INTEGER\n");}
+	| ident ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER {printf("declaration -->ident ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER\n");}
+	| ident ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER {printf("declaration --> ident ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER\n");}
 		;
 		
 stmt-loop: /*epsilon*/ {printf("stmt-loop --> epsilon\n");}
@@ -63,7 +63,7 @@ statement: var ASSIGN expression {printf("statement --> \n");}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("statement --> IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF\n");}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("statement --> WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n");}
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("statement --> DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr\n");}
-	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("statement --> FOR var ASSIGN NUMBER %s SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n", yytext);}
+	| FOR var ASSIGN number SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("FOR var ASSIGN number SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n");}
 	| READ var-loop {printf("statement --> READ var-loop\n");}
 	| WRITE var-loop {printf("statement --> WRITE var-loop\n");}
 	| CONTINUE {printf("statement --> CONTINUE\n");}
@@ -126,16 +126,22 @@ term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
 		
 term: var {printf("term --> var\n");}
 	| SUB %prec UMINUS var {printf("term --> UMINUS var \n");}
-	| NUMBER {printf("term --> NUMBER %s \n", yytext);}
-	| SUB %prec UMINUS NUMBER {printf("term --> UMINUS NUMBER %s \n", yytext);}
+	| number {printf("term --> number \n");}
+	| SUB %prec UMINUS number {printf("term --> UMINUS number\n");}
 	| L_PAREN expression R_PAREN{printf("term --> L_PAREN expression R_PAREN\n");}
 	| SUB %prec UMINUS L_PAREN expression R_PAREN {printf("term --> UMINUS L_PAREN expression R_PAREN\n");}
-	| IDENT L_PAREN term-loop R_PAREN {printf("term --> IDENT %s L_PAREN expression R_PAREN\n", yytext);}
+	| ident L_PAREN term-loop R_PAREN {printf("term --> ident L_PAREN expression R_PAREN\n");}
 		;
 		
-var: IDENT {printf("var --> IDENT %s \n", yytext);}
-	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> IDENT %s L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n", yytext);}
-	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> IDENT %s L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n", yytext);}
+var: ident {printf("var --> ident \n");}
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n");}
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
+		;
+		
+number: NUMBER {printf("number --> NUMBER %s \n", yytext);}
+		;
+		
+ident: IDENT {printf("ident --> IDENT %s \n", yytext);}
 		;
 %%
 
