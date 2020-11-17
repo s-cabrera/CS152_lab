@@ -103,8 +103,8 @@ comp: EQ {printf("comp --> EQ\n");}
 		;
 		
 expression-loop: /*epsilon*/ {printf("expression-loop --> epsilon\n");}
-	| expression-loop ADD multiplicative-expr {printf("expression-loop --> expression-loop PLUS multiplicative-expr");}
-	| expression-loop SUB multiplicative-expr {printf("expression-loop --> expression-loop SUB multiplicative-expr");}
+	| expression-loop ADD multiplicative-expr {printf("expression-loop --> expression-loop PLUS multiplicative-expr \n");}
+	| expression-loop SUB multiplicative-expr {printf("expression-loop --> expression-loop SUB multiplicative-expr \n");}
 		;
 
 expression: multiplicative-expr expression-loop{printf("expression --> multiplicative-expr expression-loop\n");}
@@ -116,12 +116,12 @@ mult-expr-loop: /*epsilon*/ {printf("mult-expr-loop --> epsilon \n");}
 	| mult-expr-loop MOD term {printf("mult-expr-loop --> mult-expr-loop MOD term \n");}
 		;
 
-multiplicative-expr: term mult-expr-loop{printf("multiplicative-expr --> term mult-expr-loop");}
+multiplicative-expr: term mult-expr-loop{printf("multiplicative-expr --> term mult-expr-loop \n");}
 		;
 		
 term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
 	| expression {printf("term-loop --> expression\n");}
-	| expression COMMA term-loop{printf("term-loop --> expression COMMA term-loop");}
+	| expression COMMA term-loop{printf("term-loop --> expression COMMA term-loop \n");}
 		;
 		
 term: var {printf("term --> var\n");}
