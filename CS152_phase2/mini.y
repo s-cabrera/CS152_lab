@@ -30,7 +30,7 @@
 
 %%
 program: program function {printf(" program --> program function");}
-		/*epsilon*/ {printf("program --> epsilon");}
+		| /*epsilon*/ {printf("program --> epsilon");}
 		;
 		
 declaration-loop: /*epsilon*/ {printf("declaration-loop --> epsilon\n");}
