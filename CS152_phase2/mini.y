@@ -4,7 +4,7 @@
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
- extern const char * yytext
+ extern const char * yytext;
  FILE * yyin;
 %}
 
