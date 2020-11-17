@@ -81,7 +81,6 @@ relation-and-expr-loop: /*epsilon*/ {printf("relation-and-expr-loop --> epsilon\
 		;
 		
 relation-and-expr: relation-expr relation-and-expr-loop{printf("relation-and-expr --> relation-expr\n");}
-	| relation-expr  {printf("relation-and-expr --> relation-expr AND relation-expr\n");}
 		;
 		
 relation-expr: expression comp expression {printf("relation-expr --> expression comp expression\n");}
