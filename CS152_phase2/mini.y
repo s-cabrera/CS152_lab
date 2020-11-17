@@ -54,7 +54,7 @@ stmt-loop: /*epsilon*/ {printf("stmt-loop --> epsilon\n");}
 	| statement SEMICOLON stmt-loop {printf("stmt-loop --> statement SEMICOLON stmt-loop\n");}
 		;
 
-var-loop: var {printf("var-loop --> var");}
+var-loop: var {printf("var-loop --> var \n");}
 	| var COLON var-loop{printf("var-loop --> var COLON var-loop\n");}
 	;
 		
