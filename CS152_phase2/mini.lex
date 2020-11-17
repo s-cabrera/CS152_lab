@@ -53,10 +53,10 @@ return				{currPos += yyleng; return RETURN;  }
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
 {digit}+			{currPos += yyleng; return NUMBER; }
-{digit}+{iden}+			//{ printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-_+{iden}+			//{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{alpha}+{iden}*_	//	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{alpha}+{iden}*			{currPos += yyleng; return IDENT; }
+{digit}+{iden}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+_+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{alpha}+{iden}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{alpha}+{iden}*		{currPos += yyleng; return IDENT; }
 
 				/***** Operators *****/
 				/*********************/
@@ -93,7 +93,3 @@ _+{iden}+			//{ printf("Error at line %d, column %d: identifier \"%s\" must begi
 .				{ printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); currPos += yyleng;}	
 
 %%
-
-int main(){
-	yylex();
-}
