@@ -29,7 +29,7 @@
 
 
 %%
-program: program function {printf(" program --> program function \n");}
+program: program function {printf("program --> program function \n");}
 		| /*epsilon*/ {printf("program --> epsilon \n");}
 		;
 		
@@ -37,7 +37,7 @@ declaration-loop: /*epsilon*/ {printf("declaration-loop --> epsilon\n");}
 	| declaration SEMICOLON declaration-loop{printf("declaration-loop --> declaration SEMICOLON declaration-loop\n");}
 		;
 		
-function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY {printf("function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY\n");}
+function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY {printf("function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY\n");}
 		;
 		
 ident-loop:/*epsilon*/ {printf("ident-loop --> epsilon\n");}
@@ -77,7 +77,7 @@ bool-expr: relation-and-expr bool-expr-loop{printf("bool-expr --> relation-and-e
 		;
 		
 relation-and-expr-loop: /*epsilon*/ {printf("relation-and-expr-loop --> epsilon\n");}
-	| relation-and-expr-loop AND relation-expr {printf("relation-and-expr-loop --> relation-and-expr-loop AND relation-expr\n");}
+	| AND relation-and-expr relation-and-expr-loop {printf("relation-and-expr-loop --> AND relation-and-expr relation-and-expr-loop\n");}
 		;
 		
 relation-and-expr: relation-expr relation-and-expr-loop{printf("relation-and-expr --> relation-expr\n");}
