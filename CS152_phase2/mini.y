@@ -37,7 +37,7 @@ declaration-loop: /*epsilon*/ {printf("declaration-loop --> epsilon\n");}
 	| declaration SEMICOLON declaration-loop{printf("declaration-loop --> declaration SEMICOLON declaration-loop\n");}
 		;
 		
-function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY {printf("function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY\n");}
+function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY stmt-loop END_BODY {printf("function --> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGIN_LOCALS declaration-loop END_LOCALS BEGIN_BODY declaration-loop END_BODY\n");}
 		;
 		
 ident-loop:/*epsilon*/ {printf("ident-loop --> epsilon\n");}
