@@ -44,9 +44,9 @@ ident-loop:/*epsilon*/ {printf("ident-loop --> epsilon\n");}
 	| COMMA IDENT ident-loop {printf("ident-loop -->  COMMA IDENT ident-loop\n");}
 		; 
 		
-declaration: IDENT ident-loop COLON INTEGER {printf("declaration --> ident-loop COLON INTEGER\n");}
-	| ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration --> ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
-	| ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration --> ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
+declaration: IDENT ident-loop COLON INTEGER {printf("declaration --> IDENT ident-loop COLON INTEGER\n");}
+	| IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -->IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
+	| IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration --> IDENT ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
 		;
 		
 stmt-loop: /*epsilon*/ {printf("stmt-loop --> epsilon\n");}
