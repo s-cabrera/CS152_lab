@@ -153,36 +153,36 @@ return				{currPos += yyleng; return RETURN;  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-{digit}+			{currPos += yyleng; printf("NUMBER %s\n", yytext); }
+{digit}+			{currPos += yyleng; return("NUMBER %s\n", yytext); }
 {digit}+{iden}+			{ printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
 _+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
 {alpha}+{iden}*_		{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{alpha}+{iden}*			{ printf("IDENT %s\n", yytext); currPos += yyleng; }
+{alpha}+{iden}*			{currPos += yyleng;  return("IDENT %s\n", yytext); }
 
 				/***** Operators *****/
 				/*********************/
--				{ printf("SUB\n"); currPos += yyleng; }
-\+				{ printf("ADD\n"); currPos += yyleng; }
-\*				{ printf("MULT\n"); currPos += yyleng; }
-\/				{ printf("DIV\n"); currPos += yyleng; }
-\%				{ printf("MOD\n"); currPos += yyleng; }
-\=\=				{ printf("EQ\n"); currPos += yyleng; }
-\!\=				{ printf("NEQ\n"); currPos += yyleng; }
-\<\=				{ printf("LTE\n"); currPos += yyleng; }
-\>\=				{ printf("GTE\n"); currPos += yyleng; }
-\<				{ printf("LT\n"); currPos += yyleng; }
-\>				{ printf("GT\n"); currPos += yyleng; }
+-				{currPos += yyleng; return SUB;}
+\+				{currPos += yyleng; return ADD;  }
+\*				{currPos += yyleng; return MULT;  }
+\/				{currPos += yyleng; return DIV;  }
+\%				{currPos += yyleng; return MOD;  }
+\=\=			{currPos += yyleng; return EQ;  }
+\!\=			{currPos += yyleng; return NEQ;  }
+\<\=			{currPos += yyleng; return LTE;  }
+\>\=			{currPos += yyleng; return GTE;  }
+\<				{currPos += yyleng; return LT;  }
+\>				{currPos += yyleng; return GT;  }
 
 				/***** Special Symbols *****/
 				/***************************/
-\;				{ printf("SEMICOLON\n"); currPos += yyleng; }
-\(				{ printf("L_PAREN\n"); currPos += yyleng; }
-\)				{ printf("R_PAREN\n"); currPos += yyleng; }
-\[				{ printf("L_SQUARE_BRACKET\n"); currPos += yyleng; }
-\]				{ printf("R_SQUARE_BRACKET\n"); currPos += yyleng; }
-\:				{ printf("COLON\n"); currPos += yyleng; }
-\,				{ printf("COMMA\n"); currPos += yyleng; }
-\:=				{ printf("ASSIGN\n"); currPos += yyleng; }
+\;				{currPos += yyleng; return SEMICOLON;  }
+\(				{currPos += yyleng; return L_PAREN;  }
+\)				{currPos += yyleng; return R_PAREN;  }
+\[				{currPos += yyleng; return L_SQUARE_BRACKET;  }
+\]				{currPos += yyleng; return R_SQUARE_BRACKET;  }
+\:				{currPos += yyleng; return COLON;  }
+\,				{currPos += yyleng; return COMMA;  }
+\:=				{currPos += yyleng; return ASSIGN;  }
 	
 				/***** Whitespace *****/
 				/**********************/
@@ -198,4 +198,3 @@ _+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin 
 int main(){
 	yylex();
 }
->>>>>>> 20fc65a0983ff868093837a01f0a357751b990f5
