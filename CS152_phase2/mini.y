@@ -70,7 +70,7 @@ statement: var ASSIGN expression {printf("statement --> var ASSIGN expression \n
 	| RETURN expression {printf("statement --> RETURN expression\n");}
 		;
 
-bool-expr-loop:relation-and-expr{printf("bool-expr --> relation-and-expr\n");}
+bool-expr:relation-and-expr{printf("bool-expr --> relation-and-expr\n");}
 	| bool-expr OR relation-and-expr {printf("bool-expr --> bool-expr OR relation-and-expr\n");}
 		;
 		
