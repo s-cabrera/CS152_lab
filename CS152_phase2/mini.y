@@ -110,7 +110,7 @@ mult-expr:term {printf("mult-expr --> term \n");}
 		
 term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
 	| expression {printf("term-loop --> expression\n");}
-	| expression COMMA term-loop{printf("term-loop --> expression COMMA term-loop \n");}
+	| term-loop COMMA expression{printf("term-loop --> term-loop COMMA expression \n");}
 		;
 		
 term: var {printf("term --> var\n");}
