@@ -96,9 +96,9 @@ comp: EQ {printf("comp --> EQ\n");}
 	| GTE {printf("comp --> GTE\n");}
 		;
 		
-expression: mult-expr{printf("expression-loop --> mult-expr\n");}
-	| expression ADD mult-expr {printf("expression-loop --> expression PLUS mult-expr \n");}
-	| expression SUB mult-expr {printf("expression-loop --> expression SUB mult-expr \n");}
+expression: mult-expr{printf("expression --> mult-expr\n");}
+	| expression ADD mult-expr {printf("expression --> expression PLUS mult-expr \n");}
+	| expression SUB mult-expr {printf("expression --> expression SUB mult-expr \n");}
 		;
 
 
