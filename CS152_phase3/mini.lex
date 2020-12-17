@@ -1,6 +1,6 @@
 /* Regexes */
 %{
-	#include "y.tab.h"
+	#include "parser.tab.h"
 	int currLine = 1;
 	int currPos = 1;
 %}
