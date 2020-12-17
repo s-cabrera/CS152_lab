@@ -134,7 +134,7 @@ declaration: ident-loop COLON INTEGER
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
-				$$.code += ".[] " + *it + ", " + $5;
+				$$.code += ".[] " + *it + ", " + to_string($5);
 				$$.ids.push_back(*it);
 			}
 		}
@@ -142,7 +142,7 @@ declaration: ident-loop COLON INTEGER
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
-				$$.code += ".[] " + *it + ", " + $5*$8;
+				$$.code += ".[] " + *it + ", " + to_string($5*$8);
 				$$.ids.push_back(*it);
 			}
 		}
