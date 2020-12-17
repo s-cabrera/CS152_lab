@@ -63,8 +63,8 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-{DIGIT}+			{currPos += yyleng; return yy::parser::make_NUMBER(0, loc); }
-{ALPHA}+{IDEN}*		{currPos += yyleng; return yy::parser::make_IDENT(yytext, loc); }
+[0-9]+			{currPos += yyleng; return yy::parser::make_NUMBER(0, loc); }
+[a-zA-Z]+[a-zA-Z0-9_]*		{currPos += yyleng; return yy::parser::make_IDENT("", loc); }
 
 				/***** Operators *****/
 				/*********************/
