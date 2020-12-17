@@ -2,9 +2,6 @@
 #include <iostream>
 #define YY_DECL yy::parser::symbol_type yylex()
 #include "parser.tab.hh"
-#include <math.h>
-#define extern char *yytext;
-
 int currLine = 0;
 int currPos = 1;
 static yy::location loc;
@@ -20,8 +17,6 @@ static yy::location loc;
 	DIGIT 		[0-9]
 	ALPHA 		[a-zA-Z]
 	IDEN		[a-zA-Z0-9_]
-	COMMENT		##[^\n]*\n
-	WHITESPACE 	[ \r\t]+
 	/* your definitions end */
 
 %%
@@ -33,7 +28,7 @@ loc.step();
 	/* your rules here */
 					/***** Comments *****/
 				/********************/
-{COMMENT}			{ ++currLine; currPos = 1; }
+##[^\n]*\n			{ ++currLine; currPos = 1; }
 
 				/***** Keywords *****/
 				/********************/
@@ -101,7 +96,7 @@ _+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin 
 	
 				/***** Whitespace *****/
 				/**********************/
-{WHITESPACE}			{ currPos += yyleng; }
+[ \r\t]+			{ currPos += yyleng; }
 \n				{ ++currLine; currPos = 1; }
 
 				/***** Unexpected Symbols *****/
