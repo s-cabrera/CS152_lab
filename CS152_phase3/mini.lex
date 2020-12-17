@@ -3,6 +3,8 @@
 #define YY_DECL yy::parser::symbol_type yylex()
 #include "parser.tab.hh"
 #include <math.h>
+#define extern char *yytext;
+
 int currLine = 0;
 int currPos = 1;
 static yy::location loc;
@@ -15,6 +17,11 @@ static yy::location loc;
 %}
 
 	/* your definitions here */
+	DIGIT 		[0-9]
+	ALPHA 		[a-zA-Z]
+	IDEN		[a-zA-Z0-9_]
+	COMMENT		##[^\n]*\n
+	WHITESPACE 	[ \r\t]+
 	/* your definitions end */
 
 %%
@@ -26,7 +33,7 @@ loc.step();
 	/* your rules here */
 					/***** Comments *****/
 				/********************/
-[##[^\n]*\n]			{ ++currLine; currPos = 1; }
+{COMMENT}			{ ++currLine; currPos = 1; }
 
 				/***** Keywords *****/
 				/********************/
@@ -61,11 +68,11 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-[0-9]+			{currPos += yyleng; return yy::parser::make_NUMBER(loc, yytext); }
-[0-9]+[a-zA-Z0-9_]+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-_+[a-zA-Z0-9_]+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-[a-zA-Z]+[a-zA-Z0-9_]*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-[a-zA-Z]+[a-zA-Z0-9_]*		{currPos += yyleng; return yy::parser::make_IDENT(loc,yytext); }
+{DIGIT}+			{currPos += yyleng; return yy::parser::make_NUMBER(0, loc); }
+{DIGIT}+{IDEN}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+_+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{ALPHA}+{IDEN}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{ALPHA}+{IDEN}*		{currPos += yyleng; return yy::parser::make_IDENT(yytext, loc); }
 
 				/***** Operators *****/
 				/*********************/
@@ -94,7 +101,7 @@ _+[a-zA-Z0-9_]+			{ printf("Error at line %d, column %d: identifier \"%s\" must 
 	
 				/***** Whitespace *****/
 				/**********************/
-[ \r\t]+			{ currPos += yyleng; }
+{WHITESPACE}			{ currPos += yyleng; }
 \n				{ ++currLine; currPos = 1; }
 
 				/***** Unexpected Symbols *****/
