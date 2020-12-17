@@ -9,30 +9,23 @@ declaration-loop --> epsilon
 ident --> IDENT k 
 var --> ident 
 term --> var
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
-expression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> mult-expr
 comp --> LTE
 number --> NUMBER 1 
 term --> number 
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
-expression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> mult-expr
 relation-expr --> expression comp expression
-relation-and-expr-loop --> epsilon
 relation-and-expr --> relation-expr
-bool-expr-loop --> epsilon
-bool-expr --> relation-and-expr bool-expr-loop
+bool-expr --> relation-and-expr
 relation-expr --> L_PAREN bool-expr R_PAREN
-relation-and-expr-loop --> epsilon
 relation-and-expr --> relation-expr
-bool-expr-loop --> epsilon
-bool-expr --> relation-and-expr bool-expr-loop
+bool-expr --> relation-and-expr
 number --> NUMBER 1 
 term --> number 
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
-expression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> mult-expr
 statement --> RETURN expression
 stmt-loop --> epsilon
 stmt-loop --> statement SEMICOLON stmt-loop
@@ -41,30 +34,30 @@ ident --> IDENT fibonacci
 ident --> IDENT k 
 var --> ident 
 term --> var
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+mult-expr --> term 
+expression --> mult-expr
 number --> NUMBER 1 
 term --> number 
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop SUB multiplicative-exprexpression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> expression SUB mult-expr 
 term-loop --> expression
 term --> ident L_PAREN expression R_PAREN
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+mult-expr --> term 
+expression --> mult-expr
 ident --> IDENT fibonacci 
 ident --> IDENT k 
 var --> ident 
 term --> var
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
+mult-expr --> term 
+expression --> mult-expr
 number --> NUMBER 2 
 term --> number 
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop SUB multiplicative-exprexpression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> expression SUB mult-expr 
 term-loop --> expression
 term --> ident L_PAREN expression R_PAREN
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> expression-loop PLUS multiplicative-exprexpression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> expression PLUS mult-expr 
 statement --> RETURN expression
 stmt-loop --> epsilon
 stmt-loop --> statement SEMICOLON stmt-loop
@@ -92,15 +85,13 @@ ident --> IDENT fibonacci
 ident --> IDENT n 
 var --> ident 
 term --> var
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
-expression --> multiplicative-expr expression-loop
+mult-expr --> term 
+expression --> mult-expr
 term-loop --> expression
 term --> ident L_PAREN expression R_PAREN
-mult-expr-loop --> epsilon 
-multiplicative-expr --> term mult-expr-loopexpression-loop --> epsilon
-expression --> multiplicative-expr expression-loop
-statement --> 
+mult-expr --> term 
+expression --> mult-expr
+statement --> var ASSIGN expression 
 ident --> IDENT fib_n 
 var --> ident 
 var-loop --> var 
