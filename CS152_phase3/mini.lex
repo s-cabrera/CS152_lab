@@ -3,8 +3,6 @@
 #define YY_DECL yy::parser::symbol_type yylex()
 #include "parser.tab.hh"
 #include <math.h>
-#define extern char *yytext;
-
 int currLine = 0;
 int currPos = 1;
 static yy::location loc;
