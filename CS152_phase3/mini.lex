@@ -17,11 +17,6 @@ static yy::location loc;
 %}
 
 	/* your definitions here */
-	DIGIT 		[0-9]
-	ALPHA 		[a-zA-Z]
-	IDEN		[a-zA-Z0-9_]
-	COMMENT		##[^\n]*\n
-	WHITESPACE 	[ \r\t]+
 	/* your definitions end */
 
 %%
