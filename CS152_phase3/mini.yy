@@ -127,7 +127,7 @@ declaration: ident-loop COLON INTEGER
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
-				$$.code += ". " + *it;
+				$$.code += ". " + *it + "\n";
 				$$.ids.push_back(*it);
 			}
 		}
