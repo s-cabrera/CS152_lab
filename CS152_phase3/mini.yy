@@ -90,7 +90,7 @@ declaration-loop: /*epsilon*/
 		}
 	| declaration SEMICOLON declaration-loop
 		{
-			$$.code = $1.code + "\n" + $3.code
+			$$.code = $1.code + "\n" + $3.code;
 			$$.ids = $1.ids;
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
@@ -225,7 +225,7 @@ var: ident {printf("var --> ident \n");}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
 		;
 		
-ident: IDENT {printf("ident --> IDENT %s \n", yytext);}
+ident: IDENT {printf("ident --> IDENT %d \n");}
 		;
 %%
 
