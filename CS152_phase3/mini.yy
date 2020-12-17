@@ -50,7 +50,7 @@ void yyerror(const char *msg);
 	
 	/* end of your code */
 }
-%token END 0 "end of file"
+%token END 0 "end of file";
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY
 %token INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE 
 %token READ WRITE 

@@ -3,7 +3,7 @@ beginparams
 	d,e : integer;
 endparams
 beginlocals
-	a,b,c : integer
+	a,b,c : integer;
 endlocals
 beginbody
 	c := a + c;
