@@ -33,7 +33,7 @@ loc.step();
 	/* your rules here */
 					/***** Comments *****/
 				/********************/
-{COMMENT}			{ ++currLine; currPos = 1; }
+[##[^\n]*\n]			{ ++currLine; currPos = 1; }
 
 				/***** Keywords *****/
 				/********************/
@@ -68,11 +68,11 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-{DIGIT}+			{currPos += yyleng; return yy::parser::make_NUMBER(loc, yytext); }
-{DIGIT}+{IDEN}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-_+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{ALPHA}+{IDEN}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{ALPHA}+{IDEN}*		{currPos += yyleng; return yy::parser::make_IDENT(loc,yytext); }
+[0-9]+			{currPos += yyleng; return yy::parser::make_NUMBER(loc, yytext); }
+[0-9]+[a-zA-Z0-9_]+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+_+[a-zA-Z0-9_]+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+[a-zA-Z]+[a-zA-Z0-9_]*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+[a-zA-Z]+[a-zA-Z0-9_]*		{currPos += yyleng; return yy::parser::make_IDENT(loc,yytext); }
 
 				/***** Operators *****/
 				/*********************/
