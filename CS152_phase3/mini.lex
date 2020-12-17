@@ -64,9 +64,6 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
 {DIGIT}+			{currPos += yyleng; return yy::parser::make_NUMBER(0, loc); }
-{DIGIT}+{IDEN}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-_+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{ALPHA}+{IDEN}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
 {ALPHA}+{IDEN}*		{currPos += yyleng; return yy::parser::make_IDENT(yytext, loc); }
 
 				/***** Operators *****/
@@ -116,4 +113,3 @@ _+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin 
 	/* your rules end */
 
 %%
-
