@@ -91,7 +91,7 @@ declaration-loop: /*epsilon*/
 		}
 	| declaration SEMICOLON declaration-loop
 		{
-			$$.code = $1.code + "\n" + $3.code;
+			$$.code = $1.code + $3.code;
 			$$.ids = $1.ids;
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
