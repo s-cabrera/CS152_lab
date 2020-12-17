@@ -16,12 +16,11 @@ static yy::location loc;
 %}
 
 	/* your definitions here */
-	digit 		[0-9]
-	alpha 		[a-zA-Z]
-	iden		[a-zA-Z0-9_]
-	comment		##[^\n]*\n
-	whitespace 	[ \r\t]+
-	newline		\n
+	DIGIT 		[0-9]
+	ALPHA 		[a-zA-Z]
+	IDEN		[a-zA-Z0-9_]
+	COMMENT		##[^\n]*\n
+	WHITESPACE 	[ \r\t]+
 	/* your definitions end */
 
 %%
@@ -33,7 +32,7 @@ loc.step();
 	/* your rules here */
 					/***** Comments *****/
 				/********************/
-{comment}			{ ++currLine; currPos = 1; }
+{COMMENT}			{ ++currLine; currPos = 1; }
 
 				/***** Keywords *****/
 				/********************/
@@ -68,11 +67,11 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-{digit}+			{currPos += yyleng; return yy::parser::make_NUMBER(loc, yytext); }
-{digit}+{iden}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-_+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{alpha}+{iden}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
-{alpha}+{iden}*		{currPos += yyleng; return yy::parser::make_IDENT(loc,yytext); }
+{DIGIT}+			{currPos += yyleng; return yy::parser::make_NUMBER(loc, yytext); }
+{DIGIT}+{IDEN}+	    { printf("Error	at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+_+{IDEN}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{ALPHA}+{IDEN}*_	{ printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); currPos += yyleng; exit(1);}
+{ALPHA}+{IDEN}*		{currPos += yyleng; return yy::parser::make_IDENT(loc,yytext); }
 
 				/***** Operators *****/
 				/*********************/
@@ -101,7 +100,7 @@ _+{iden}+			{ printf("Error at line %d, column %d: identifier \"%s\" must begin 
 	
 				/***** Whitespace *****/
 				/**********************/
-{whitespace}			{ currPos += yyleng; }
+{WHITESPACE}			{ currPos += yyleng; }
 \n				{ ++currLine; currPos = 1; }
 
 				/***** Unexpected Symbols *****/
