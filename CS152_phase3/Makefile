@@ -1,5 +1,5 @@
 parse: mini.lex mini.y
-	bison -v -d --file-prefix=parser mini.yy
+	bison -v -d --file-prefix=parser mini.y
 	flex mini.lex
 	gcc -o parser y.tab.c lex.yy.c -lfl
 
