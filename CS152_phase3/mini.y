@@ -205,7 +205,7 @@ mult-expr:term {printf("mult-expr --> term \n");}
 	| mult-expr MOD term {printf("mult-expr --> mult-expr MOD term \n");}
 		;
 		
-term-loop: /*epsilon*/ {$$ = "";}
+term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
 	| expression {printf("term-loop --> expression\n");}
 	| term-loop COMMA expression{printf("term-loop --> term-loop COMMA expression \n");}
 		;
@@ -224,7 +224,7 @@ var: ident {printf("var --> ident \n");}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
 		;
 		
-ident: IDENT {$$ = $1;}
+ident: IDENT {printf("ident --> IDENT %s \n", yytext);}}
 		;
 %%
 
