@@ -23,7 +23,7 @@ using namespace std;
 	struct dec_type{
 		string code;
 		list<string> ids;
-	}
+	};
 	/* end the structures for non-terminal types */
 }
 
