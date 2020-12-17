@@ -1,4 +1,11 @@
 %{
+ #include <stdio.h>
+ #include <stdlib.h>
+ void yyerror(const char *msg);
+ extern int currLine;
+ extern int currPos;
+ extern const char * yytext;
+ FILE * yyin;
 %}
 
 %skeleton "lalr1.cc"
@@ -42,7 +49,6 @@ struct tests
 #include <map>
 #include <regex>
 #include <set>
-yy::parser::symbol_type yylex();
 void yyerror(const char *msg);
 
 	/* define your symbol table, global variables,
@@ -231,13 +237,17 @@ ident: IDENT {printf("ident --> IDENT %d \n");}
 		;
 %%
 
-int main(int argc, char *argv[])
-{
-	yy::parser p;
-	return p.parse();
+int main(int argc, char **argv) {
+   if (argc > 1) {
+      yyin = fopen(argv[1], "r");
+      if (yyin == NULL){
+         printf("syntax: %s filename\n", argv[0]);
+      }//end if
+   }//end if
+   yyparse(); // Calls yylex() for tokens.
+   return 0;
 }
 
-void yy::parser::error(const yy::location& l, const std::string& m)
-{
-	std::cerr << l << ": " << m << std::endl;
+void yyerror(const char *msg) {
+   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
