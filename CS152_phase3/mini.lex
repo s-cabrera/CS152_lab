@@ -2,7 +2,7 @@
 #include <iostream>
 #define YY_DECL yy::parser::symbol_type yylex()
 #include "parser.tab.hh"
-
+int currLine, currPos;
 static yy::location loc;
 %}
 
