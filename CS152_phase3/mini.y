@@ -29,7 +29,7 @@ using namespace std;
 
 %code
 {
-#include "parser.tab.hh"
+#include "parser.tab.h"
 struct tests
 {
 	string name;
