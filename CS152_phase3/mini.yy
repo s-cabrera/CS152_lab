@@ -1,11 +1,4 @@
 %{
- #include <stdio.h>
- #include <stdlib.h>
- void yyerror(const char *msg);
- extern int currLine;
- extern int currPos;
- extern const char * yytext;
- FILE * yyin;
 %}
 
 %skeleton "lalr1.cc"
@@ -49,6 +42,7 @@ struct tests
 #include <map>
 #include <regex>
 #include <set>
+yy::parser::symbol_type yylex();
 void yyerror(const char *msg);
 
 	/* define your symbol table, global variables,
@@ -56,8 +50,7 @@ void yyerror(const char *msg);
 	
 	/* end of your code */
 }
-%token END 0 "end of file";
-
+%token END 0 "end of file"
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY
 %token INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE 
 %token READ WRITE 
@@ -237,17 +230,13 @@ ident: IDENT {printf("ident --> IDENT %d \n");}
 		;
 %%
 
-int main(int argc, char **argv) {
-   if (argc > 1) {
-      yyin = fopen(argv[1], "r");
-      if (yyin == NULL){
-         printf("syntax: %s filename\n", argv[0]);
-      }//end if
-   }//end if
-   yyparse(); // Calls yylex() for tokens.
-   return 0;
+int main(int argc, char *argv[])
+{
+	yy::parser p;
+	return p.parse();
 }
 
-void yyerror(const char *msg) {
-   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
+void yy::parser::error(const yy::location& l, const std::string& m)
+{
+	std::cerr << l << ": " << m << std::endl;
 }
