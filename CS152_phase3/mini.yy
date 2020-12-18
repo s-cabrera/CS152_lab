@@ -167,7 +167,7 @@ stmt-loop: /*epsilon*/
 		}
 	| statement SEMICOLON stmt-loop 
 		{
-			$$ = $1 + "\n" + $2; 
+			$$ = $1 + "\n" + $3; 
 		}
 		;
 
