@@ -79,8 +79,8 @@ void yyerror(const char *msg);
 
 %type <string> program function ident comp  
 %type <dec_type> declaration-loop declaration 
-%type <list<string>> ident-loop var
-%type <stmt_type>  var-loop relation-and-expr bool-expr relation-expr statement 
+%type <list<string>> ident-loop 
+%type <stmt_type>  var var-loop relation-and-expr bool-expr relation-expr statement 
 %type <stmt_type>  expression mult-expr stmt-loop term term-loop
 %start start_prog
 
