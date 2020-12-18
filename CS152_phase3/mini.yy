@@ -412,12 +412,12 @@ term: var
 	| SUB %prec UMINUS var {$$.code = "-" + $2.code;}
 	| NUMBER {$$.code = to_string($1);}
 	| SUB %prec UMINUS NUMBER {$$.code = "-" + to_string($2);}
-	| L_PAREN expression R_PAREN{printf($$.code = $2.code;}
+	| L_PAREN expression R_PAREN{$$.code = $2.code;}
 	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$.code = "-" + $3.code;}
 	| ident L_PAREN term-loop R_PAREN 
 		{
 			$$.ids.push_back($1); 
-			$$.code = $1.code + "(" + $3.code + ")";
+			$$.code = $1.code + "\(" + $3.code + "\)";
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
@@ -428,7 +428,7 @@ term: var
 var: ident {$$.code = $1; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
-			$$.code = $1.code + $3.code;
+			$$.code = $1 + $3.code;
 			$$.ids.push_front($1);
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
