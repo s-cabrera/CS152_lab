@@ -404,7 +404,10 @@ term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
 term: var 
 		{	
 			$$.code = $1.code;
-			$$.ids.push_back($1);
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
 		}
 	| SUB %prec UMINUS var {printf("$$.code = - + $2.code");}
 	| NUMBER {$$.code = to_string($1);}
