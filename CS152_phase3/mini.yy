@@ -76,9 +76,10 @@ void yyerror(const char *msg);
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left L_PAREN R_PAREN 
 
-%type <string> program function ident comp term term-loop expression mult-expr bool-expr
-%type <dec_type> declaration-loop declaration stmt-loop var-loop relation-and-expr relation-expr statement
+%type <string> program function ident comp term term-loop expression mult-expr 
+%type <dec_type> declaration-loop declaration var-loop 
 %type <list<string>> ident-loop var
+%type <stmt_type> stmt-loop statement relation-expr relation-and-expr bool-expr
 
 %start start_prog
 
@@ -212,33 +213,105 @@ statement: var ASSIGN expression
 				i++;
 			}
 		}
-	| IF bool-expr THEN stmt-loop ENDIF {}
-	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {}
-	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
-	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {}
-	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
-	| READ var-loop {$$ = "." + $2;}
-	| WRITE var-loop {$$ = "." + $2;}
+	| IF bool-expr THEN stmt-loop ENDIF {printf("statement -> if then end if \n");}
+	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
+	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("\n");}
+	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("\n");}
+	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
+		{printf("\n");}
+	| READ var-loop {printf("$$ = . + $2;\n");}
+	| WRITE var-loop {printf("$$ = . + $2");}
 	| CONTINUE {printf("stmt-> continue my misery \n");}
-	| RETURN expression {$$ = "ret" + $2;}
+	| RETURN expression {printf("$$ = ret + $2");}
 		;
 
 bool-expr:relation-and-expr{$$ = $1;}
-	| bool-expr OR relation-and-expr {$$ = "|| " + $1 + ", " + $3;}
+	| bool-expr OR relation-and-expr 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "||";
+			$$.ids = $1  + $3.ids;
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++){
+				$$.ids.push_back(*it);
+				i++;
+			}
+		}
 		;
 		
-relation-and-expr: relation-expr {$$ = $1;}
-	| relation-and-expr AND relation-expr  {$$ = "&& " + $1 + ", " + $3 ;}
+relation-and-expr: relation-expr 
+		{
+			$$.code = $1.code;
+			$$.ids = rela
+		}
+	| relation-and-expr AND relation-expr  
+		{
+			$$.comp = "&&";
+			$$.code = $1.code + $3.code ;
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);	
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 		
-relation-expr: expression comp expression {$$.code = $2.code + $1.code + $3.code;}
-	| NOT expression comp expression {$$ = $3 + $$ + + "\n" "!" + $3+ "\n";}
-	| TRUE {$$ = "true";}
-	| NOT TRUE {$$ = "false";}
-	| FALSE {$$ = "false";}
-	| NOT FALSE {$$ = "true";}
-	| L_PAREN bool-expr R_PAREN {$$ = $2;}
-	| NOT L_PAREN bool-expr R_PAREN {$$ = "! " + $$ + ", " + $3;}
+relation-expr: expression comp expression 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = $2;
+			$$.ids = $1.ids + $3.ids;
+		}
+	| NOT expression comp expression 
+		{
+			$$.code = "! " + $2 + " " + $4;
+			$$.comp = $3;
+			$$.ids = $2.ids + $4.ids;
+		}
+	| TRUE 
+		{
+			$$.code = "true";
+			$$.comp = "";
+			$$.ids = list<string>();
+		}
+	| NOT TRUE 
+		{
+			$$ = "false";
+			$$.comp = "";
+			$$.ids = list<string>();
+		}
+	| FALSE 
+		{
+			$$ = "false";
+			$$.comp = "";
+			$$.ids = list<string>();
+		}
+	| NOT FALSE 
+		{
+			$$ = "true";
+			$$.comp = "";
+			$$.ids = list<string>();
+		}
+	| L_PAREN bool-expr R_PAREN 
+		{
+			$$.code = $2.code;
+			$$.comp = $2.comp;
+			for(list<string>::iterator it = $2.ids.begin(); it != $2.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
+	| NOT L_PAREN bool-expr R_PAREN 
+		{
+			$$.code = $2.code;
+			$$.comp = "!";
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 		
 comp: EQ {$$ = "==";}
