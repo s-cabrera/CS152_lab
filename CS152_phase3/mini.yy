@@ -414,13 +414,15 @@ term: var
 	| SUB %prec UMINUS NUMBER {$$.code = "-" + to_string($2);}
 	| L_PAREN expression R_PAREN{printf($$.code = $2.code;}
 	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$.code = "-" + $3.code;}
-	| ident L_PAREN term-loop R_PAREN {
+	| ident L_PAREN term-loop R_PAREN 
+		{
 			$$.ids.push_back($1); 
 			$$.code = $1.code + "(" + $3.code + ")";
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
 			}
+		}
 		;
 		
 var: ident {$$.code = $1; $$.ids.push_back($1);}
