@@ -214,18 +214,18 @@ statement: var ASSIGN expression
 	}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
-		$$.code = $2.code + "\n" + $4.code + "\n" + $6 + "\n";
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code + "\n";
 		}
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr 
 		{
-		$$.code = $3.code + "\n" + $5.code + "\n" + $8 + "\n";
+		$$.code = $3.code + "\n" + $5.code + "\n" + $8.code + "\n";
 		}
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
 		$$.code = "= " + $2.code + ", " + to_string($4) + "\n";
 		$$.code += $6.code + "\n";
-		$$.code += "= " + $8.code + ", " + $10 + "\n";
-		$$.code += $12 + "\n" + $14;
+		$$.code += "= " + $8.code + ", " + $10.code + "\n";
+		$$.code += $12.code + "\n" + $14.code;
 		}
 	| READ var-loop 
 		{
