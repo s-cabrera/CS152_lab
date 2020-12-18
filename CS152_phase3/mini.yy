@@ -390,7 +390,7 @@ mult-expr:term {$$ = $1;}
 		
 term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
 	| expression {$$.code = $1.code; $$.ids = list<string>();}
-	| term-loop COMMA expression{printf($$ = $1 + ", " + $3);}
+	| term-loop COMMA expression{printf("$$ = $1 + ", " + $3");}
 		;
 		
 term: var 
