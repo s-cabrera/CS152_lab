@@ -200,7 +200,7 @@ statement: var ASSIGN expression
 		}
 	| IF bool-expr THEN stmt-loop ENDIF 
 		{
-			$$.code = $2.code + ;
+			$$.code = $2.code + $4.code;
 		}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("\n");}
