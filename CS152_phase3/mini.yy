@@ -401,35 +401,36 @@ term-loop: /*epsilon*/ {$$ = "";}
 		;
 		
 term: var 
-		{			
+		{	
+			$$.code = $1.code;
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
 				$$.code += "var:  " + *it + "\n";
 				$$.ids.push_back(*it);
 			}
 		}
-	| SUB %prec UMINUS var {$$ = "-" + $2;}
+	| SUB %prec UMINUS var {print($$.code = - + $2.code");}
 	| NUMBER {$$ = to_string($1);}
-	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($2);}
-	| L_PAREN expression R_PAREN{$$ = $2;}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $3;}
+	| SUB %prec UMINUS NUMBER {printf("$$.code = - + to_string($2)");}
+	| L_PAREN expression R_PAREN{printf("$$ = $2");}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN {printf("$$ = + + $3");}
 	| ident L_PAREN term-loop R_PAREN {
-		$$.push_front($1);
-		$$ = $3;
+		print("$$.push_front($1);
+		$$ = $3");
 		}
 		;
 		
-var: ident {$$.push_back($1);}
+var: ident {$$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
-			$$ = $3;
-			$$.push_front($1);
+			$$.code = $3.code;
+			$$.ids.push_front($1);
 			
 		}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET
 		{
-			$$ = $3 + $6;
-			$$.push_front($1);
+			$$.code = $3.code + $6.code;
+			$$.ids.push_front($1);
 		}
 		;
 		
