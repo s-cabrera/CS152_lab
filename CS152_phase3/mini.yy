@@ -26,8 +26,9 @@ using namespace std;
 	};
 	struct stmt_type{
 		string code;
-		string comp;
 		list<string> ids;
+		string comp;
+		
 	};
 	/* end the structures for non-terminal types */
 }
@@ -78,8 +79,8 @@ void yyerror(const char *msg);
 
 %type <string> program function ident comp  
 %type <dec_type> declaration-loop declaration 
-%type <list<string>> ident-loop 
-%type <stmt_type>  var-loop var relation-and-expr bool-expr relation-expr statement 
+%type <list<string>> ident-loop var
+%type <stmt_type>  var-loop relation-and-expr bool-expr relation-expr statement 
 %type <stmt_type>  expression mult-expr stmt-loop term term-loop
 %start start_prog
 
@@ -173,7 +174,7 @@ stmt-loop: /*epsilon*/
 var-loop: var 
 		{		
 			$$.code = $1.code;
-			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
 			}
@@ -181,11 +182,11 @@ var-loop: var
 		| var COLON var-loop
 		{	
 			$$.code = $1.code + $3.code;			
-			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
 			}
-			for(list<string>::iterator it = $3.begin(); it != $3.end(); it++)
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
 			}
@@ -260,7 +261,7 @@ relation-expr: expression comp expression
 		}
 	| NOT expression comp expression 
 		{
-			$$.code = "! " + $2 + " " + $4;
+			$$.code = "! " + $2.code + " " + $4.code;
 			$$.comp = $3;
 			for(list<string>::iterator it = $2.ids.begin(); it != $2.ids.end(); it++)
 			{
@@ -403,11 +404,7 @@ term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
 term: var 
 		{	
 			$$.code = $1.code;
-			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
-			{
-				$$.code += "var:  " + *it + "\n";
-				$$.ids.push_back(*it);
-			}
+			$$.ids.push_back($1);
 		}
 	| SUB %prec UMINUS var {printf("$$.code = - + $2.code");}
 	| NUMBER {$$.code = to_string($1);}
