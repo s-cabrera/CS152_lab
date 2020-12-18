@@ -171,20 +171,14 @@ stmt-loop: /*epsilon*/
 		;
 
 var-loop: var 
-		{
-			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
-			{
-				$$.code += "var = " + *it + "\n";
-				$$.ids.push_back(*it);
-			}
+		{	
+			$$.code = $1.code;
+			$$.ids = $1.ids;
 		}
 		| var COLON var-loop
 		{	
-			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
-			{
-				$$.code += "var = " + *it + "\n";
-				$$.ids.push_back(*it);
-			}
+			$$.code = $1.code + $3.code;
+			$$.ids = $1.ids;
 			for(list<string>::iterator it = $3.begin(); it != $3.end(); it++)
 			{
 				$$.code += "var = " + *it + "\n";
@@ -214,7 +208,7 @@ bool-expr:relation-and-expr{$$ = $1;}
 		{
 			$$.code = $1.code + $3.code;
 			$$.comp = "||";
-			$$.ids = $1  + $3.ids;
+			$$.ids = $1.ids  + $3.ids;
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++){
 				$$.ids.push_back(*it);
 			}
