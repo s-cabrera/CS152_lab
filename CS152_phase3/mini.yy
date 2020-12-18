@@ -440,6 +440,9 @@ term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
 	| term-loop COMMA expression
 		{
 			$$.code = $1.code + ", " + $3.code;
+			if($$.comp == ""){
+				$$.comp = "="
+			}
 			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
