@@ -181,7 +181,7 @@ var-loop: var
 		}
 		| var COLON var-loop
 		{	
-			$1.comp = $0.comp;
+			$$.comp = $$.comp;
 			$$.code = $1.code + $3.code;			
 			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
@@ -476,7 +476,7 @@ term: var
 var: ident {$$.code = $1; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
-			$$.code = "[]" + $0.comp + $1 + ", " + $3.code;
+			$$.code = "[]" + $$.comp + $1 + ", " + $3.code;
 			$$.ids.push_front($1);
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
