@@ -229,12 +229,12 @@ statement: var ASSIGN expression
 		}
 	| READ var-loop 
 		{
-			$$.code = "." + $2.code + "\n";
+			$$.code = "." + $2.code;
 			$2.comp = "<";
 		}
 	| WRITE var-loop 
 		{
-			$$.code = "." + $2.code + "\n";
+			$$.code = "." + $2.code;
 			$2.comp = ">";
 		}
 	| CONTINUE {$$.code = "continue";}
