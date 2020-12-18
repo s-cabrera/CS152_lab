@@ -203,8 +203,8 @@ statement: var ASSIGN expression
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("\n");}
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{printf("\n");}
-	| READ var-loop {$$ = "." + $2.code + "\n";}
-	| WRITE var-loop {$$ = "." + $2.code;}
+	| READ var-loop {$$.code = "." + $2.code + "\n";}
+	| WRITE var-loop {$$.code = "." + $2.code;}
 	| CONTINUE {printf("stmt-> continue \n");}
 	| RETURN expression {$$.code = "ret" + $2.code;}
 		;
