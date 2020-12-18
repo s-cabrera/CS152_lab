@@ -203,22 +203,22 @@ statement: var ASSIGN expression
 		}
 	| IF bool-expr THEN stmt-loop ENDIF 
 		{
-			$$.code = $2.code + "\n" + $4.code + "\n";
+			$$.code = $2.code + "\n" + $4.code;
 			int i = 0;
 			if($2.code == "true"){
-				$$.code = "goto" + $4.code + "\n";
+				$$.code = "goto " + $4.code;
 			}
 		}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {
-		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code + "\n";
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code;
 	}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
-		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code + "\n";
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code;
 		}
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr 
 		{
-		$$.code = $3.code + "\n" + $5.code + "\n" + $8.code + "\n";
+		$$.code = $3.code + "\n" + $5.code + "\n" + $8.code;
 		}
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
