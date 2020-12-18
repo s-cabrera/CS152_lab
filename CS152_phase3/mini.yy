@@ -77,7 +77,7 @@ void yyerror(const char *msg);
 %left L_PAREN R_PAREN 
 
 %type <string> program function ident comp term term-loop expression mult-expr bool-expr
-%type <dec_type> declaration-loop declaration stmt-loop var-loop relation-and-expr relation-expr
+%type <dec_type> declaration-loop declaration stmt-loop var-loop relation-and-expr relation-expr statement
 %type <list<string>> ident-loop var
 
 %start start_prog
@@ -267,15 +267,14 @@ term-loop: /*epsilon*/ {$$ = "";}
 		;
 		
 term: var {$$ = $1}
-	| SUB %prec UMINUS var {$$ = "-" + $4;}
+	| SUB %prec UMINUS var {$$ = "-" + $3;}
 	| NUMBER {$$ = to_string($1);}
-	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($4);}
+	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($3);}
 	| L_PAREN expression R_PAREN{$$ = $2;}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $5;}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $4;}
 	| ident L_PAREN term-loop R_PAREN {
 		$$.push_front($1);
 		$$ = $3;
-		
 		}
 		;
 		
