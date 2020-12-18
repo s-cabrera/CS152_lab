@@ -417,7 +417,7 @@ term: var
 	| ident L_PAREN term-loop R_PAREN 
 		{
 			$$.ids.push_back($1); 
-			$$.code = $1.code + "\(" + $3.code + "\)";
+			$$.code = $1 + "(" + $3.code + ")";
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
