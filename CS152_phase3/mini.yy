@@ -28,7 +28,6 @@ using namespace std;
 		string code;
 		list<string> ids;
 		string comp;
-		
 	};
 	/* end the structures for non-terminal types */
 }
@@ -48,6 +47,7 @@ struct tests
 #include <map>
 #include <regex>
 #include <set>
+#include <queue>
 yy::parser::symbol_type yylex();
 void yyerror(const char *msg);
 
@@ -83,6 +83,7 @@ void yyerror(const char *msg);
 %type <stmt_type>  var var-loop relation-and-expr bool-expr relation-expr statement 
 %type <stmt_type>  expression mult-expr stmt-loop term term-loop
 %start start_prog
+%queue label
 
 %%
 start_prog: program {cout << $1 << endl;}
@@ -200,13 +201,31 @@ statement: var ASSIGN expression
 		}
 	| IF bool-expr THEN stmt-loop ENDIF 
 		{
-			$$.code = $2.code + $4.code;
+			$$.code = $2.code + "\n" + $4.code + "\n";
+			int i = 0;
+			if($2.code == "true"){
+				$$.code = "goto" + $4 + "\n";
+			}
 		}
-	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
-	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("\n");}
-	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("\n");}
+	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6 + "\n";
+	}
+	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
+		{
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6 + "\n";
+		}
+	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr 
+		{
+		$$.code = $3.code + "\n" + $5.code + "\n" + $8 + "\n";
+		}
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
-		{printf("\n");}
+		{
+		$$.code = "= " + $2.code + ", " + to_string($4) + "\n";
+		$$.code += $1.code + ", " + $3.code;
+		$$.code += $6.code + "\n";
+		$$.code += "= " + $8.code + ", " + $10 + "\n";
+		$$.code += $12 + "\n" + $14;
+		}
 	| READ var-loop 
 		{
 			$$.code = "." + $2.code + "\n";
@@ -500,6 +519,12 @@ var: ident {$$.code = $1; $$.ids.push_back($1);}
 			}	
 		}
 		;
+
+label:
+		{
+		$$.code = ": "
+		}
+		; 
 		
 ident: IDENT {$$ = $1;}
 		;
