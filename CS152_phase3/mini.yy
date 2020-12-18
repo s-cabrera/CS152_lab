@@ -76,7 +76,7 @@ void yyerror(const char *msg);
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left L_PAREN R_PAREN 
 
-%type <string> program function ident stmt-loop
+%type <string> program function ident
 %type <dec_type> declaration-loop declaration stmt-loop
 %type <list<string>> ident-loop var-loop
 
@@ -219,7 +219,7 @@ statement: var ASSIGN expression
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
 	| READ var-loop {$$ = "." + $2;}
 	| WRITE var-loop {$$ = "." + $2;}
-	| CONTINUE {printf("stmt-> continue my misery + "\n");}
+	| CONTINUE {printf("stmt-> continue my misery \n");}
 	| RETURN expression {$$ = "ret" + $2;}
 		;
 
