@@ -397,8 +397,26 @@ mult-expr:term {$$ = $1;}
 		;
 		
 term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
-	| expression {$$.code = $1.code; $$.ids = $1.ids;}
-	| term-loop COMMA expression{printf("$$ = $1 + ", " + $3");}
+	| expression 
+		{
+			$$.code = $1.code; 
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
+	| term-loop COMMA expression
+		{
+			$$.code = $1.code + ", " + $3.code;
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 		
 term: var 
@@ -409,11 +427,32 @@ term: var
 				$$.ids.push_back(*it);
 			}
 		}
-	| SUB %prec UMINUS var {$$.code = "-" + $2.code;}
+	| SUB %prec UMINUS var 
+		{
+			$$.code = "-" + $2.code;
+			for(list<string>::iterator it = $2.ids.begin(); it != $2.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 	| NUMBER {$$.code = to_string($1);}
 	| SUB %prec UMINUS NUMBER {$$.code = "-" + to_string($2);}
-	| L_PAREN expression R_PAREN{$$.code = $2.code;}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$.code = "-" + $3.code;}
+	| L_PAREN expression R_PAREN
+		{
+			$$.code = $2.code;
+			for(list<string>::iterator it = $2.ids.begin(); it != $2.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN 
+		{
+			$$.code = "-" + "(" + $3.code + ")";
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 	| ident L_PAREN term-loop R_PAREN 
 		{
 			$$.ids.push_back($1); 
@@ -439,6 +478,14 @@ var: ident {$$.code = $1; $$.ids.push_back($1);}
 		{
 			$$.code = $3.code + $6.code;
 			$$.ids.push_front($1);
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $6.ids.begin(); it != $6.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}	
 		}
 		;
 		
