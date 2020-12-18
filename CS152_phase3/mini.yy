@@ -441,7 +441,7 @@ term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
 		{
 			$$.code = $1.code + ", " + $3.code;
 			if($$.comp == ""){
-				$$.comp = "="
+				$$.comp = "=";
 			}
 			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
