@@ -24,6 +24,11 @@ using namespace std;
 		string code;
 		list<string> ids;
 	};
+	struct stmt_type{
+		string code;
+		string comp;
+		list<string> ids;
+	};
 	/* end the structures for non-terminal types */
 }
 
@@ -72,8 +77,8 @@ void yyerror(const char *msg);
 %left L_PAREN R_PAREN 
 
 %type <string> program function ident stmt-loop
-%type <dec_type> declaration-loop declaration
-%type <list<string>> ident-loop
+%type <dec_type> declaration-loop declaration stmt-loop
+%type <list<string>> ident-loop var-loop
 
 %start start_prog
 
@@ -110,7 +115,12 @@ function: FUNCTION ident SEMICOLON BEGIN_PARAMS declaration-loop END_PARAMS BEGI
 				i++;
 			}
 			$$ += $8.code;
-			$$ += $11;
+			$$ += $11.code;
+			i = 0;
+			for(list<string>::iterator it = $11.ids.begin(); it != $11.ids.end(); it++){
+				$$ += *it + " $" + to_string(i) + "\n";
+				i++;
+			}
 			$$ += "endfunc";  
 		}
 		;
@@ -149,81 +159,138 @@ declaration: ident-loop COLON INTEGER
 		}
 		;
 		
-stmt-loop: /*epsilon*/ {$$ = "";}
-	| statement SEMICOLON stmt-loop {printf("stmt-loop --> statement SEMICOLON stmt-loop\n");}
+stmt-loop: /*epsilon*/ 
+		{
+			$$.code = "";
+			$$.ids = list<string>();
+		}
+	| statement SEMICOLON stmt-loop 
+		{
+			$$.code = $1.code + $3.code;
+			$$.ids = $1.ids;
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 
-var-loop: var {printf("var-loop --> var \n");}
-	| var COLON var-loop{printf("var-loop --> var COLON var-loop\n");}
-	;
+var-loop: var 
+		{
+			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
+			{
+				$$.code += "var = " + *it + "\n";
+				$$.ids.push_back(*it);
+			}
+		}
+		| var COLON var-loop
+		{	
+			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
+				{
+				$$.code += "var = " + *it + "\n";
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.begin(); it != $3.end(); it++)
+				{
+				$$.code += "var = " + *it + "\n";
+				$$.ids.push_back(*it);
+			}
+		}	
+		;
 		
-statement: var ASSIGN expression {printf("statement --> var ASSIGN expression \n");}
-	| IF bool-expr THEN stmt-loop ENDIF {printf("statement --> IF bool-expr THEN stmt-loop ENDIF\n");}
-	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("statement --> IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF\n");}
-	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("statement --> WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n");}
-	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("statement --> DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr\n");}
-	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP\n");}
-	| READ var-loop {printf("statement --> READ var-loop\n");}
-	| WRITE var-loop {printf("statement --> WRITE var-loop\n");}
-	| CONTINUE {printf("statement --> CONTINUE\n");}
-	| RETURN expression {printf("statement --> RETURN expression\n");}
+statement: var ASSIGN expression 
+		{/* comp dst(var), src1(expression), src2*/
+			$$ = $3.comp + " " + $1.name + " " + $3.code;
+			$$ = $1.code;
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++){
+				$$ += *it + " $" + to_string(i) + "\n";
+				i++;
+			}
+			$$ = $3.code;
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++){
+				$$ += *it + " $" + to_string(i) + "\n";
+				i++;
+			}
+		}
+	| IF bool-expr THEN stmt-loop ENDIF {}
+	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {}
+	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
+	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {}
+	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
+	| READ var-loop {$$ = "." + $2;}
+	| WRITE var-loop {$$ = "." + $2;}
+	| CONTINUE {printf("stmt-> continue my misery + "\n");}
+	| RETURN expression {$$ = "ret" + $2;}
 		;
 
-bool-expr:relation-and-expr{printf("bool-expr --> relation-and-expr\n");}
-	| bool-expr OR relation-and-expr {printf("bool-expr --> bool-expr OR relation-and-expr\n");}
+bool-expr:relation-and-expr{$$ = $1;}
+	| bool-expr OR relation-and-expr {$$ = "|| " + $1 + ", " + $3;}
 		;
 		
-relation-and-expr: relation-expr {printf("relation-and-expr --> relation-expr\n");}
-	| relation-and-expr AND relation-expr  {printf("relation-and-expr-loop --> relation-and-expr AND relation-expr\n");}
+relation-and-expr: relation-expr {$$ = $1;}
+	| relation-and-expr AND relation-expr  {$$ = "&& " + $1 + ", " + $3 ;}
 		;
 		
-relation-expr: expression comp expression {printf("relation-expr --> expression comp expression\n");}
-	| NOT expression comp expression {printf("relation-expr --> NOT expression comp expression\n");}
-	| TRUE {printf("relation-expr --> TRUE\n");}
-	| NOT TRUE {printf("relation-expr --> NOT TRUE\n");}
-	| FALSE {printf("relation-expr --> FALSE\n");}
-	| NOT FALSE {printf("relation-expr --> NOT FALSE\n");}
-	| L_PAREN bool-expr R_PAREN {printf("relation-expr --> L_PAREN bool-expr R_PAREN\n");}
-	| NOT L_PAREN bool-expr R_PAREN {printf("relation-expr --> NOT L_PAREN bool-expr R_PAREN\n");}
+relation-expr: expression comp expression {$$ = $2 + $1 + $3;}
+	| NOT expression comp expression {$$ = $3 + $$ + + "\n" "!" + $3+ "\n";}
+	| TRUE {$$ = "true";}
+	| NOT TRUE {$$ = "false";}
+	| FALSE {$$ = "false";}
+	| NOT FALSE {$$ = "true";}
+	| L_PAREN bool-expr R_PAREN {$$ = $2;}
+	| NOT L_PAREN bool-expr R_PAREN {$$ = "! " + $$ + ", " + $2;}
 		;
 		
-comp: EQ {printf("comp --> EQ\n");}
-	| NEQ {printf("comp --> NEQ\n");}
-	| LT {printf("comp --> LT\n");}
-	| LTE {printf("comp --> LTE\n");}
-	| GT {printf("comp --> GT\n");}
-	| GTE {printf("comp --> GTE\n");}
+comp: EQ {$$ = "==";}
+	| NEQ {$$ = "!=";}
+	| LT {$$ = "<";}
+	| LTE {$$ = "<=";}
+	| GT {$$ = ">";}
+	| GTE {$$ = ">=";}
 		;
 		
-expression: mult-expr{printf("expression --> mult-expr\n");}
-	| expression ADD mult-expr {printf("expression --> expression PLUS mult-expr \n");}
-	| expression SUB mult-expr {printf("expression --> expression SUB mult-expr \n");}
+expression: mult-expr{$$ = }
+	| expression ADD mult-expr {$$ = "+" + $1 + $3;}
+	| expression SUB mult-expr {$$ = "-" + $1 + $3;}
 		;
 
 
-mult-expr:term {printf("mult-expr --> term \n");}
-	| mult-expr MULT term {printf("mult-expr --> mult-expr MULT term \n");}
-	| mult-expr DIV term {printf("mult-expr --> mult-expr DIV term \n");}
-	| mult-expr MOD term {printf("mult-expr --> mult-expr MOD term \n");}
+mult-expr:term {$$ = $1;}
+	| mult-expr MULT term {$$ = "*" + $1 + $3;}
+	| mult-expr DIV term {$$ = "/" + $1 + $3;}
+	| mult-expr MOD term {$$ = "%" + $1 + $3;}
 		;
 		
-term-loop: /*epsilon*/ {printf("term-loop --> epsilon \n");}
-	| expression {printf("term-loop --> expression\n");}
-	| term-loop COMMA expression{printf("term-loop --> term-loop COMMA expression \n");}
+term-loop: /*epsilon*/ {$$ = "";}
+	| expression {$$ = $1;}
+	| term-loop COMMA expression{printf($$ = $1 + ", " + $3;}
 		;
 		
-term: var {printf("term --> var\n");}
-	| SUB %prec UMINUS var {printf("term --> UMINUS var \n");}
-	| NUMBER {printf("term --> NUMBER \n");}
-	| SUB %prec UMINUS NUMBER {printf("term --> UMINUS NUMBER\n");}
-	| L_PAREN expression R_PAREN{printf("term --> L_PAREN expression R_PAREN\n");}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {printf("term --> UMINUS L_PAREN expression R_PAREN\n");}
-	| ident L_PAREN term-loop R_PAREN {printf("term --> ident L_PAREN expression R_PAREN\n");}
+term: var {$$ = $1}
+	| SUB %prec UMINUS var {$$ = "-" + $4;}
+	| NUMBER {$$ = to_string($1);}
+	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($4);}
+	| L_PAREN expression R_PAREN{$$ = $2;}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $5;}
+	| ident L_PAREN term-loop R_PAREN {
+		$$.push_front($1);
+		$$ = $3;
+		
+		}
 		;
 		
-var: ident {printf("var --> ident \n");}
-	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n");}
-	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var --> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
+var: ident {$$.push_back($1);}
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
+		{
+			$$ = $3;
+			$$.push_front($1);
+			
+		}
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET
+		{
+			$$ = $3 + $6;
+			$$.push_front($1);
+		}
 		;
 		
 ident: IDENT {$$ = $1;}
