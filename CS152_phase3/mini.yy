@@ -223,7 +223,6 @@ statement: var ASSIGN expression
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
 		$$.code = "= " + $2.code + ", " + to_string($4) + "\n";
-		$$.code += $1.code + ", " + $3.code;
 		$$.code += $6.code + "\n";
 		$$.code += "= " + $8.code + ", " + $10 + "\n";
 		$$.code += $12 + "\n" + $14;
