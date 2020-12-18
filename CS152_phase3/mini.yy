@@ -76,11 +76,12 @@ void yyerror(const char *msg);
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left L_PAREN R_PAREN 
 
-%type <string> program function ident comp term term-loop expression mult-expr 
-%type <dec_type> declaration-loop declaration var-loop 
+%type <string> program function ident comp term term-loop
+%type <string> expression mult-expr statement stmt-loop
+%type <dec_type> declaration-loop declaration 
 %type <list<string>> ident-loop var
-%type <stmt_type> stmt-loop statement relation-expr relation-and-expr bool-expr
-
+%type <stmt_type>  relation-expr 
+%type <stmt_type> relation-and-expr bool-expr var-loop 
 %start start_prog
 
 %%
@@ -162,17 +163,11 @@ declaration: ident-loop COLON INTEGER
 		
 stmt-loop: /*epsilon*/ 
 		{
-			$$.code = "";
-			$$.ids = list<string>();
+			$$ = "";
 		}
 	| statement SEMICOLON stmt-loop 
 		{
-			$$.code = $1.code + $3.code;
-			$$.ids = $1.ids;
-			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
-			{
-				$$.ids.push_back(*it);
-			}
+			$$ = $1 + "\n" + $2; 
 		}
 		;
 
@@ -187,12 +182,12 @@ var-loop: var
 		| var COLON var-loop
 		{	
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
-				{
+			{
 				$$.code += "var = " + *it + "\n";
 				$$.ids.push_back(*it);
 			}
 			for(list<string>::iterator it = $3.begin(); it != $3.end(); it++)
-				{
+			{
 				$$.code += "var = " + *it + "\n";
 				$$.ids.push_back(*it);
 			}
@@ -201,17 +196,7 @@ var-loop: var
 		
 statement: var ASSIGN expression 
 		{/* comp dst(var), src1(expression), src2*/
-			$$ = $3.comp + " " + $1.name + " " + $3.code;
-			$$ = $1.code;
-			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++){
-				$$ += *it + " $" + to_string(i) + "\n";
-				i++;
-			}
-			$$ = $3.code;
-			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++){
-				$$ += *it + " $" + to_string(i) + "\n";
-				i++;
-			}
+			$$ = $3.comp + " " + $1.code + " " + $3.code;
 		}
 	| IF bool-expr THEN stmt-loop ENDIF {printf("statement -> if then end if \n");}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
