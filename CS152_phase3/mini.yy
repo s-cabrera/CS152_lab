@@ -417,7 +417,7 @@ term: var
 	| ident L_PAREN term-loop R_PAREN {printf("$$.push_front($1); $$ = $3");}
 		;
 		
-var: ident {$$.code = ""; $$.ids.push_back($1);}
+var: ident {$$.code = $1; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
 			$$.code = $3.code;
