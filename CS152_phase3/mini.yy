@@ -77,11 +77,10 @@ void yyerror(const char *msg);
 %left L_PAREN R_PAREN 
 
 %type <string> program function ident comp term term-loop
-%type <string> expression mult-expr statement stmt-loop
 %type <dec_type> declaration-loop declaration 
 %type <list<string>> ident-loop var
-%type <stmt_type>  relation-expr 
-%type <stmt_type> relation-and-expr bool-expr var-loop 
+%type <stmt_type>  relation-and-expr bool-expr relation-expr statement 
+%type <stmt_type>  var-loop expression mult-expr stmt-loop
 %start start_prog
 
 %%
@@ -163,11 +162,11 @@ declaration: ident-loop COLON INTEGER
 		
 stmt-loop: /*epsilon*/ 
 		{
-			$$ = "";
+			$$.code = "";
 		}
 	| statement SEMICOLON stmt-loop 
 		{
-			$$ = $1 + "\n" + $3; 
+			$$.code = $1 + "\n" + $3; 
 		}
 		;
 
@@ -196,7 +195,7 @@ var-loop: var
 		
 statement: var ASSIGN expression 
 		{/* comp dst(var), src1(expression), src2*/
-			$$ = $3.comp + " " + $1.code + " " + $3.code;
+			$$.code = $3.comp + " " + $1.code + " " + $3.code;
 		}
 	| IF bool-expr THEN stmt-loop ENDIF {printf("statement -> if then end if \n");}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
@@ -250,13 +249,27 @@ relation-expr: expression comp expression
 		{
 			$$.code = $1.code + $3.code;
 			$$.comp = $2;
-			$$.ids = $1.ids + $3.ids;
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);	
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
 		}
 	| NOT expression comp expression 
 		{
 			$$.code = "! " + $2 + " " + $4;
 			$$.comp = $3;
-			$$.ids = $2.ids + $4.ids;
+			for(list<string>::iterator it = $2.ids.begin(); it != $2.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);	
+			}
+			for(list<string>::iterator it = $4.ids.begin(); it != $4.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
 		}
 	| TRUE 
 		{
@@ -311,23 +324,90 @@ comp: EQ {$$ = "==";}
 		;
 		
 expression: mult-expr{$$ = $1;}
-	| expression ADD mult-expr {$$ = "+" + $1 + $3;}
-	| expression SUB mult-expr {$$ = "-" + $1 + $3;}
+	| expression ADD mult-expr 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "+";
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
+	| expression SUB mult-expr 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "-";
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 
 
 mult-expr:term {$$ = $1;}
-	| mult-expr MULT term {$$ = "*" + $1 + $3;}
-	| mult-expr DIV term {$$ = "/" + $1 + $3;}
-	| mult-expr MOD term {$$ = "%" + $1 + $3;}
+	| mult-expr MULT term 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "*";
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}		
+		}
+	| mult-expr DIV term 
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "/";
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
+	| mult-expr MOD term
+		{
+			$$.code = $1.code + $3.code;
+			$$.comp = "%";
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
+		}
 		;
 		
 term-loop: /*epsilon*/ {$$ = "";}
 	| expression {$$ = $1;}
-	| term-loop COMMA expression{printf($$ = $1 + ", " + $3;}
+	| term-loop COMMA expression{printf($$ = $1 + ", " + $3);}
 		;
 		
-term: var {$$ = $1}
+term: var 
+		{			
+			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
+			{
+				$$.code += "var:  " + *it + "\n";
+				$$.ids.push_back(*it);
+			}
+		}
 	| SUB %prec UMINUS var {$$ = "-" + $2;}
 	| NUMBER {$$ = to_string($1);}
 	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($2);}
