@@ -181,6 +181,7 @@ var-loop: var
 		}
 		| var COLON var-loop
 		{	
+			$1.comp = $$.comp;
 			$$.code = $1.code + $3.code;			
 			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
@@ -203,8 +204,16 @@ statement: var ASSIGN expression
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("\n");}
 	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{printf("\n");}
-	| READ var-loop {$$.code = "." + $2.code + "\n";}
-	| WRITE var-loop {$$.code = "." + $2.code;}
+	| READ var-loop 
+		{
+			$$.code = "." + $2.code + "\n";
+			$2.comp = "<";
+		}
+	| WRITE var-loop 
+		{
+			$$.code = "." + $2.code + "\n";
+			$2.comp = ">";
+		}
 	| CONTINUE {printf("stmt-> continue \n");}
 	| RETURN expression {$$.code = "ret" + $2.code;}
 		;
@@ -467,7 +476,7 @@ term: var
 var: ident {$$.code = $1; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
-			$$.code = $1 + $3.code;
+			$$.code = "[]" + $$.comp + $1 + ", " + $3.code;
 			$$.ids.push_front($1);
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
