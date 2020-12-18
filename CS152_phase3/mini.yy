@@ -447,7 +447,7 @@ term: var
 		}
 	| SUB %prec UMINUS L_PAREN expression R_PAREN 
 		{
-			$$.code = "-" + "(" + $3.code + ")";
+			$$.code = "- (" + $3.code + ")";
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
 				$$.ids.push_back(*it);
