@@ -396,7 +396,7 @@ mult-expr:term {$$ = $1;}
 		;
 		
 term-loop: /*epsilon*/ {$$.code = ""; $$.ids = list<string>();}
-	| expression {$$.code = $1.code; $$.ids = list<string>();}
+	| expression {$$.code = $1.code; $$.ids = $1.ids;}
 	| term-loop COMMA expression{printf("$$ = $1 + ", " + $3");}
 		;
 		
@@ -409,12 +409,12 @@ term: var
 				$$.ids.push_back(*it);
 			}
 		}
-	| SUB %prec UMINUS var {print("$$.code = - + $2.code");}
+	| SUB %prec UMINUS var {printf("$$.code = - + $2.code");}
 	| NUMBER {$$.code = to_string($1);}
 	| SUB %prec UMINUS NUMBER {printf("$$.code = - + to_string($2)");}
 	| L_PAREN expression R_PAREN{printf("$$ = $2");}
 	| SUB %prec UMINUS L_PAREN expression R_PAREN {printf("$$ = + + $3");}
-	| ident L_PAREN term-loop R_PAREN {print("$$.push_front($1); $$ = $3");}
+	| ident L_PAREN term-loop R_PAREN {printf("$$.push_front($1); $$ = $3");}
 		;
 		
 var: ident {$$.code = ""; $$.ids.push_back($1);}
