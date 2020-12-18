@@ -7,4 +7,5 @@ beginlocals
 endlocals
 beginbody
 	c := a + c;
+	c := 
 endbody

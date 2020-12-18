@@ -60,7 +60,7 @@ return				{currPos += yyleng; return yy::parser::make_RETURN(loc);  }
 
 				/***** Nums, Identifier Errors, Identifiers *****/
 				/************************************************/
-[0-9]+			{currPos += yyleng; return yy::parser::make_NUMBER(0, loc); }
+[0-9]+			{currPos += yyleng; return yy::parser::make_NUMBER(atoi(yytext), loc); }
 [a-zA-Z]+[a-zA-Z0-9_]*		{currPos += yyleng; return yy::parser::make_IDENT(yytext, loc); }
 
 				/***** Operators *****/
