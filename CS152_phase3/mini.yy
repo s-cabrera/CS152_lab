@@ -206,11 +206,11 @@ statement: var ASSIGN expression
 			$$.code = $2.code + "\n" + $4.code + "\n";
 			int i = 0;
 			if($2.code == "true"){
-				$$.code = "goto" + $4 + "\n";
+				$$.code = "goto" + $4.code + "\n";
 			}
 		}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {
-		$$.code = $2.code + "\n" + $4.code + "\n" + $6 + "\n";
+		$$.code = $2.code + "\n" + $4.code + "\n" + $6.code + "\n";
 	}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP 
 		{
