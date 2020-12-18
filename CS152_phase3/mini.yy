@@ -82,7 +82,7 @@ void yyerror(const char *msg);
 %type <list<string>> ident-loop 
 %type <stmt_type>  var var-loop relation-and-expr bool-expr relation-expr statement 
 %type <stmt_type>  expression mult-expr stmt-loop term term-loop
-%type<queue> label
+/*%type<queue> label*/
 
 %start start_prog
 
@@ -521,12 +521,12 @@ var: ident {$$.code = $1; $$.ids.push_back($1);}
 		}
 		;
 
-label:
+/*label:
 		{
 		printf("MAKE LABEL \n");
 		}
 		; 
-		
+*/		
 ident: IDENT {$$ = $1;}
 		;
 		
