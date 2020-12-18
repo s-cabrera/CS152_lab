@@ -141,7 +141,7 @@ declaration: ident-loop COLON INTEGER
 				$$.ids.push_back(*it);
 			}
 		}
-	| ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER 
+	| ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER 
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
@@ -149,7 +149,7 @@ declaration: ident-loop COLON INTEGER
 				$$.ids.push_back(*it);
 			}
 		}
-	| ident-loop COLON ARRAY L_SQUARE_BRACKET number R_SQUARE_BRACKET L_SQUARE_BRACKET number R_SQUARE_BRACKET OF INTEGER 
+	| ident-loop COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER 
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
@@ -216,7 +216,7 @@ statement: var ASSIGN expression
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {}
-	| FOR var ASSIGN number SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
+	| FOR var ASSIGN NUMBER SEMICOLON bool-expr SEMICOLON var ASSIGN expression BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {}
 	| READ var-loop {$$ = "." + $2;}
 	| WRITE var-loop {$$ = "." + $2;}
 	| CONTINUE {printf("stmt-> continue my misery \n");}
@@ -267,11 +267,11 @@ term-loop: /*epsilon*/ {$$ = "";}
 		;
 		
 term: var {$$ = $1}
-	| SUB %prec UMINUS var {$$ = "-" + $3;}
-	| number {$$ = to_string($1);}
-	| SUB %prec UMINUS number {$$ = "-" + to_string($3);}
+	| SUB %prec UMINUS var {$$ = "-" + $2;}
+	| NUMBER {$$ = to_string($1);}
+	| SUB %prec UMINUS NUMBER {$$ = "-" + to_string($2);}
 	| L_PAREN expression R_PAREN{$$ = $2;}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $4;}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$ = "+" + $3;}
 	| ident L_PAREN term-loop R_PAREN {
 		$$.push_front($1);
 		$$ = $3;
@@ -294,10 +294,7 @@ var: ident {$$.push_back($1);}
 		
 ident: IDENT {$$ = $1;}
 		;
-
-number: NUMBER {$$ = $1;}
-		;
-
+		
 %%
 
 int main(int argc, char *argv[])
