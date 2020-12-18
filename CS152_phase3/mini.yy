@@ -76,11 +76,11 @@ void yyerror(const char *msg);
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left L_PAREN R_PAREN 
 
-%type <string> program function ident comp term term-loop
+%type <string> program function ident comp  
 %type <dec_type> declaration-loop declaration 
-%type <list<string>> ident-loop var
-%type <stmt_type>  relation-and-expr bool-expr relation-expr statement 
-%type <stmt_type>  var-loop expression mult-expr stmt-loop
+%type <list<string>> ident-loop  
+%type <stmt_type>  var var-loop relation-and-expr bool-expr relation-expr statement 
+%type <stmt_type>  expression mult-expr stmt-loop term term-loop
 %start start_prog
 
 %%
@@ -166,7 +166,7 @@ stmt-loop: /*epsilon*/
 		}
 	| statement SEMICOLON stmt-loop 
 		{
-			$$.code = $1 + "\n" + $3; 
+			$$.code = $1.code + "\n" + $3.code; 
 		}
 		;
 
@@ -217,7 +217,6 @@ bool-expr:relation-and-expr{$$ = $1;}
 			$$.ids = $1  + $3.ids;
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++){
 				$$.ids.push_back(*it);
-				i++;
 			}
 		}
 		;
@@ -417,7 +416,7 @@ term: var
 	| ident L_PAREN term-loop R_PAREN {print("$$.push_front($1); $$ = $3");}
 		;
 		
-var: ident {$$.ids.push_back($1);}
+var: ident {$$.code = ""; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
 			$$.code = $3.code;
