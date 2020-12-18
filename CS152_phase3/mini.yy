@@ -238,7 +238,7 @@ relation-expr: expression comp expression {$$.code = $2.code + $1.code + $3.code
 	| FALSE {$$ = "false";}
 	| NOT FALSE {$$ = "true";}
 	| L_PAREN bool-expr R_PAREN {$$ = $2;}
-	| NOT L_PAREN bool-expr R_PAREN {$$ = "! " + $$ + ", " + $2;}
+	| NOT L_PAREN bool-expr R_PAREN {$$ = "! " + $$ + ", " + $3;}
 		;
 		
 comp: EQ {$$ = "==";}
