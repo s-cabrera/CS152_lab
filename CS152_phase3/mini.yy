@@ -248,7 +248,7 @@ relation-and-expr: relation-expr
 		
 relation-expr: expression comp expression 
 		{
-			$$.code = $1.code + $3.code;
+			$$.code = $1.code + "' " + $3.code;
 			$$.comp = $2;
 			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
 			{
