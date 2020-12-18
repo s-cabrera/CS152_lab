@@ -76,9 +76,9 @@ void yyerror(const char *msg);
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left L_PAREN R_PAREN 
 
-%type <string> program function ident
-%type <dec_type> declaration-loop declaration stmt-loop
-%type <list<string>> ident-loop var-loop
+%type <string> program function ident comp term term-loop expression mult-expr bool-expr
+%type <dec_type> declaration-loop declaration stmt-loop var-loop relation-and-expr relation-expr
+%type <list<string>> ident-loop var
 
 %start start_prog
 
@@ -231,7 +231,7 @@ relation-and-expr: relation-expr {$$ = $1;}
 	| relation-and-expr AND relation-expr  {$$ = "&& " + $1 + ", " + $3 ;}
 		;
 		
-relation-expr: expression comp expression {$$ = $2 + $1 + $3;}
+relation-expr: expression comp expression {$$.code = $2.code + $1.code + $3.code;}
 	| NOT expression comp expression {$$ = $3 + $$ + + "\n" "!" + $3+ "\n";}
 	| TRUE {$$ = "true";}
 	| NOT TRUE {$$ = "false";}
@@ -249,7 +249,7 @@ comp: EQ {$$ = "==";}
 	| GTE {$$ = ">=";}
 		;
 		
-expression: mult-expr{$$ = }
+expression: mult-expr{$$ = $1;}
 	| expression ADD mult-expr {$$ = "+" + $1 + $3;}
 	| expression SUB mult-expr {$$ = "-" + $1 + $3;}
 		;
