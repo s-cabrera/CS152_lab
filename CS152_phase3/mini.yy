@@ -147,7 +147,7 @@ declaration: ident-loop COLON INTEGER
 		{
 			for(list<string>::iterator it = $1.begin(); it != $1.end(); it++)
 			{
-				$$.code += ".[] " + *it + ", " + to_string($5);
+				$$.code += ".[] " + *it + ", " + to_string($5) + "\n";
 				$$.ids.push_back(*it);
 			}
 		}
@@ -198,7 +198,10 @@ statement: var ASSIGN expression
 		{/* comp dst(var), src1(expression), src2*/
 			$$.code = $3.comp + " " + $1.code + ", " + $3.code;
 		}
-	| IF bool-expr THEN stmt-loop ENDIF {printf("statement -> if then end if \n");}
+	| IF bool-expr THEN stmt-loop ENDIF 
+		{
+			$$.code = $2.code + ;
+		}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
 	| WHILE bool-expr BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP {printf("\n");}
 	| DO BEGINLOOP statement SEMICOLON stmt-loop ENDLOOP WHILE bool-expr {printf("\n");}
@@ -214,7 +217,7 @@ statement: var ASSIGN expression
 			$$.code = "." + $2.code + "\n";
 			$2.comp = ">";
 		}
-	| CONTINUE {printf("stmt-> continue \n");}
+	| CONTINUE {$$.code = "continue";}
 	| RETURN expression {$$.code = "ret" + $2.code;}
 		;
 
