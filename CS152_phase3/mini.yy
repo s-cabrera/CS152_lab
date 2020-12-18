@@ -305,7 +305,7 @@ relation-expr: expression comp expression
 		}
 	| NOT L_PAREN bool-expr R_PAREN 
 		{
-			$$.code = $2.code;
+			$$.code = $3.code;
 			$$.comp = "!";
 			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
 			{
