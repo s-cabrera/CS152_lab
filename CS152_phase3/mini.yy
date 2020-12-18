@@ -241,7 +241,10 @@ bool-expr:relation-and-expr{$$ = $1;}
 relation-and-expr: relation-expr 
 		{
 			$$.code = $1.code;
-			$$.ids = rela
+			for(list<string>::iterator it = $1.ids.begin(); it != $1.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);	
+			}
 		}
 	| relation-and-expr AND relation-expr  
 		{
@@ -278,19 +281,19 @@ relation-expr: expression comp expression
 		}
 	| NOT TRUE 
 		{
-			$$ = "false";
+			$$.code = "false";
 			$$.comp = "";
 			$$.ids = list<string>();
 		}
 	| FALSE 
 		{
-			$$ = "false";
+			$$.code = "false";
 			$$.comp = "";
 			$$.ids = list<string>();
 		}
 	| NOT FALSE 
 		{
-			$$ = "true";
+			$$.code = "true";
 			$$.comp = "";
 			$$.ids = list<string>();
 		}
