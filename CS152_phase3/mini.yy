@@ -195,7 +195,7 @@ var-loop: var
 		
 statement: var ASSIGN expression 
 		{/* comp dst(var), src1(expression), src2*/
-			$$.code = $3.comp + " " + $1.code + " " + $3.code;
+			$$.code = $3.comp + " " + $1.code + ", " + $3.code;
 		}
 	| IF bool-expr THEN stmt-loop ENDIF {printf("statement -> if then end if \n");}
 	| IF bool-expr THEN stmt-loop ELSE stmt-loop ENDIF {printf("\n");}
@@ -409,20 +409,29 @@ term: var
 				$$.ids.push_back(*it);
 			}
 		}
-	| SUB %prec UMINUS var {printf("$$.code = - + $2.code");}
+	| SUB %prec UMINUS var {$$.code = "-" + $2.code;}
 	| NUMBER {$$.code = to_string($1);}
-	| SUB %prec UMINUS NUMBER {printf("$$.code = - + to_string($2)");}
-	| L_PAREN expression R_PAREN{printf("$$ = $2");}
-	| SUB %prec UMINUS L_PAREN expression R_PAREN {printf("$$ = + + $3");}
-	| ident L_PAREN term-loop R_PAREN {printf("$$.push_front($1); $$ = $3");}
+	| SUB %prec UMINUS NUMBER {$$.code = "-" + to_string($2);}
+	| L_PAREN expression R_PAREN{printf($$.code = $2.code;}
+	| SUB %prec UMINUS L_PAREN expression R_PAREN {$$.code = "-" + $3.code;}
+	| ident L_PAREN term-loop R_PAREN {
+			$$.ids.push_back($1); 
+			$$.code = $1.code + "(" + $3.code + ")";
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
 		;
 		
 var: ident {$$.code = $1; $$.ids.push_back($1);}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET 
 		{
-			$$.code = $3.code;
+			$$.code = $1.code + $3.code;
 			$$.ids.push_front($1);
-			
+			for(list<string>::iterator it = $3.ids.begin(); it != $3.ids.end(); it++)
+			{
+				$$.ids.push_back(*it);
+			}
 		}
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET
 		{
